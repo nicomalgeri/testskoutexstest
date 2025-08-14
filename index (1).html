@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SKOUTEX Tipster Simulator — Safer Football Strategy</title>
+  <meta name="description" content="Simulate safer, long-term football betting strategies with Monte Carlo, stake% and skim% optimisation, and BeSoccer data hooks.">
+  <style>
+    :root{
+      --bg:#0f1720;
+      --bg-soft:#121b26;
+      --ink:#e9eef5;
+      --muted:#a6b3c3;
+      --brand:#f6e7b0;
+      --brand-ink:#20262e;
+      --card:#0f1a26;
+      --stroke:rgba(255,255,255,.08);
+      --shadow:0 20px 50px -20px rgba(0,0,0,.6),0 8px 20px -8px rgba(0,0,0,.45);
+      --radius:18px;
+      --max:1120px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--max);margin:0 auto;padding:0 20px}
+    .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 1.1rem;border-radius:14px;background:var(--brand);color:var(--brand-ink);font-weight:700;border:1px solid #d9cfa2;box-shadow:var(--shadow);transition:transform .18s ease,filter .18s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--stroke);box-shadow:none}
+    header{position:sticky;top:0;backdrop-filter:saturate(140%) blur(8px);background:linear-gradient(180deg,rgba(15,23,32,.85),rgba(15,23,32,.6) 60%,rgba(15,23,32,0));border-bottom:1px solid var(--stroke);z-index:20}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:.7rem;font-weight:800;letter-spacing:.3px}
+    .logo{width:34px;height:34px;border-radius:10px;background:radial-gradient(circle at 30% 30%,#fff3c6, #f6e7b0 35%, #e1d497 60%, #c3b47a 100%);box-shadow:inset 0 0 0 2px rgba(0,0,0,.08),0 8px 18px rgba(0,0,0,.35)}
+    .nav a{opacity:.9}
+    .nav a:hover{opacity:1}
+    .hero{padding:64px 0 28px;position:relative;overflow:hidden}
+    .grid-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+    .badge{display:inline-block;background:rgba(255,255,255,.08);border:1px solid var(--stroke);color:var(--muted);padding:.35rem .6rem;border-radius:999px;font-size:.9rem}
+    h1{font-size:clamp(28px,4.2vw,46px);line-height:1.1;margin:.6rem 0 1rem}
+    p.lead{font-size:clamp(16px,1.9vw,19px);color:var(--muted);max-width:60ch;margin:0 0 1.3rem}
+    .hero-card{background:linear-gradient(180deg,var(--card),#0b1420);border:1px solid var(--stroke);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+    .kpi{background:rgba(255,255,255,.04);border:1px solid var(--stroke);border-radius:14px;padding:14px;text-align:center}
+    .kpi strong{display:block;font-size:22px}
+    .section{padding:40px 0}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .card{background:var(--bg-soft);border:1px solid var(--stroke);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .card h3{margin:.2rem 0 .4rem;font-size:18px}
+    .muted{color:var(--muted)}
+    .how{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:10px}
+    .step{background:var(--bg-soft);border:1px solid var(--stroke);border-radius:16px;padding:16px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .faq{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    footer{border-top:1px solid var(--stroke);margin-top:30px;padding:22px 0;color:var(--muted)}
+    .tag{display:inline-flex;align-items:center;gap:.45rem;background:rgba(246,231,176,.1);border:1px solid #3a3320;color:#f7ebbf;padding:.32rem .6rem;border-radius:999px;font-size:.85rem}
+    .mono{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    @media (max-width:980px){
+      .grid-hero{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr 1fr}
+      .how{grid-template-columns:1fr 1fr}
+      .faq{grid-template-columns:1fr}
+    }
+    @media (max-width:560px){
+      .cards{grid-template-columns:1fr}
+      .how{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <span>SKOUTEX</span>
+    </div>
+    <nav>
+      <a href="#features">Features</a>
+      <span style="opacity:.4;margin:0 .6rem">•</span>
+      <a href="#how">How it works</a>
+      <span style="opacity:.4;margin:0 .6rem">•</span>
+      <a href="#faq">FAQ</a>
+      <span style="opacity:.4;margin:0 .6rem">•</span>
+      <a class="btn" href="#" id="openApp">Open Simulator</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container grid-hero">
+      <div>
+        <span class="badge">Lower‑risk tipster strategy</span>
+        <h1>Safer football betting guided by Monte Carlo</h1>
+        <p class="lead">Optimise your stake and skim percentages to protect the downside while compounding growth. Designed for LaLiga and extendable to more leagues.</p>
+        <div class="cta">
+          <a class="btn" href="#" id="openApp2">Launch the Simulator</a>
+          <a class="btn ghost" href="#how">How it works</a>
+        </div>
+        <div style="margin-top:14px">
+          <span class="tag">Model‑first • Bankroll discipline • Realistic scenarios</span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <strong>Quick metrics</strong>
+          <span class="mono muted">LaLiga focus</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi">
+            <span class="muted">Base accuracy</span>
+            <strong>78%</strong>
+          </div>
+          <div class="kpi">
+            <span class="muted">Average odds</span>
+            <strong>1.90</strong>
+          </div>
+          <div class="kpi">
+            <span class="muted">Runs per test</span>
+            <strong>20,000</strong>
+          </div>
+        </div>
+        <div style="margin-top:14px" class="muted">
+          Uses fixed‑fraction staking per match and skims a % after each matchday to lock profit
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <div class="container">
+      <h2 style="margin:0 0 10px">Why it works</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Monte Carlo engine</h3>
+          <p class="muted">20k simulations to estimate median, tail outcomes, and drawdowns for your inputs.</p>
+        </article>
+        <article class="card">
+          <h3>Stake × Skim optimiser</h3>
+          <p class="muted">Searches multiple stake and skimming combinations to maximise lower‑tail equity and reduce ruin risk.</p>
+        </article>
+        <article class="card">
+          <h3>Risk controls</h3>
+          <p class="muted">Focus on P10, not fantasy best cases. Includes probability of halving the bankroll and average max drawdown.</p>
+        </article>
+        <article class="card">
+          <h3>BeSoccer hooks</h3>
+          <p class="muted">Optional fixtures and standings integration to support disciplined match selection.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="section">
+    <div class="container">
+      <h2 style="margin:0 0 10px">How it works</h2>
+      <div class="how">
+        <div class="step">
+          <strong>1. Set inputs</strong>
+          <p class="muted">Bankroll, accuracy, average odds, volume per matchday.</p>
+        </div>
+        <div class="step">
+          <strong>2. Run simulation</strong>
+          <p class="muted">Sweep stake and skim percentages across 20k runs.</p>
+        </div>
+        <div class="step">
+          <strong>3. Apply rules</strong>
+          <p class="muted">Use the recommended pair that protects the downside and compounds growth.</p>
+        </div>
+        <div class="step">
+          <strong>4. Bank profit</strong>
+          <p class="muted">Skim at the end of each matchday into a safe pot to lock gains.</p>
+        </div>
+      </div>
+      <div class="cta" style="margin-top:16px">
+        <a class="btn" href="#" id="openApp3">Open Simulator</a>
+        <a class="btn ghost" href="#faq">Read FAQs</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="container">
+      <h2 style="margin:0 0 10px">FAQ</h2>
+      <div class="faq">
+        <div class="card">
+          <strong>Is this financial advice</strong>
+          <p class="muted">No. This is a statistical tool to support decision making. Bet responsibly and never risk money you cannot afford to lose.</p>
+        </div>
+        <div class="card">
+          <strong>Does it guarantee profit</strong>
+          <p class="muted">No model can. The aim is to balance growth with lower drawdowns using realistic inputs and robust simulations.</p>
+        </div>
+        <div class="card">
+          <strong>Can I add more leagues</strong>
+          <p class="muted">Yes. The simulator is league‑agnostic and includes BeSoccer hooks for volume expansion.</p>
+        </div>
+        <div class="card">
+          <strong>Where is my data stored</strong>
+          <p class="muted">The app processes inputs in real time. API keys are kept as platform secrets, not in the public code.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div>© <span id="year"></span> SKOUTEX — Built for pragmatic, long‑term use</div>
+    <div>
+      <a class="btn ghost" href="mailto:hello@example.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Replace this with your live app URL once deployed
+  const APP_URL = "https://huggingface.co/spaces/your-user/your-space"
+  document.querySelectorAll("#openApp,#openApp2,#openApp3").forEach(el=>{
+    el.addEventListener("click",e=>{
+      e.preventDefault()
+      window.open(APP_URL,"_blank","noopener")
+    })
+  })
+  document.getElementById("year").textContent = new Date().getFullYear()
+</script>
+</body>
+</html>
